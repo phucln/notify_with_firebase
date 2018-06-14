@@ -1,0 +1,55 @@
+<html>
+
+<head>
+    <title>PaPu</title>
+    <link rel="manifest" href="manifest.json">
+</head>
+
+<body>
+    <h1 id='token'>token here</h1>
+    <!-- Firebase App is always required and must be first -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
+    <script>
+        var config = {
+            apiKey: "AIzaSyAtB1e1Id6QWJgxvY26FrL3mQEULz8r4sw",
+            authDomain: "fir-noti-488c0.firebaseapp.com",
+            databaseURL: "https://fir-noti-488c0.firebaseio.com",
+            projectId: "fir-noti-488c0",
+            storageBucket: "fir-noti-488c0.appspot.com",
+            messagingSenderId: "839383998651"
+        };
+        firebase.initializeApp(config);
+        // Retrieve Firebase Messaging object.
+        const messaging = firebase.messaging();
+        // Add the public key generated from the console here.
+        messaging.usePublicVapidKey(
+            "BPT3VZ3oTVrG0jMPyCnffDralJ9Ramg8SirlyJA6eLMsmL2MUpQXrh5BwODBVV-F5ndFosW4_Ec8V7bjLMtsM8c");
+        messaging.requestPermission().then(function () {
+            console.log('Notification permission granted.');
+            // Get Instance ID token. Initially this makes a network call, once retrieved
+            // subsequent calls to getToken will return from cache.
+            messaging.getToken().then(function (currentToken) {
+                if (currentToken) {
+                    console.log(currentToken);
+                } else {
+                    // Show permission request.
+                    console.log('No Instance ID token available. Request permission to generate one.');
+                    // Show permission UI.
+                    console.log(`token is: ${JSON.stringify(currentToken)}`);
+                    document.getElementById('token').innerHTML = currentToken;
+                }
+            }).catch(function (err) {
+                console.log('An error occurred while retrieving token. ', err);
+            });
+        }).catch(function (err) {
+            console.log('Unable to get permission to notify.', err);
+        });
+        messaging.onMessage(function (payload) {
+            console.log('Message received. ', payload);
+        });
+    </script>
+</body>
+
+</html>
